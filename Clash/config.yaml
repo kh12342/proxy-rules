@@ -1,0 +1,431 @@
+mixed-port: 7890
+redir-port: 7891
+tproxy-port: 1536
+ipv6: false
+allow-lan: true
+unified-delay: true
+tcp-concurrent: true
+mode: Rule
+log-level: silent
+find-process-mode: always
+external-controller: 127.0.0.1:9090
+external-ui: ui
+external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip"
+secret: ""
+profile:
+  store-fake-ip: true
+  store-selected: true
+
+
+p: &p
+  type: http
+  interval: 86400
+  health-check:
+    enable: true
+    url: https://www.gstatic.com/generate_204
+    interval: 900
+
+A: &A
+  filter: "^(?!.*(到期|Expire|流量|Traffic)).*$"
+  use:
+  - 1.ImmTelecom
+  - 2.FlowerCloud
+
+All: &All
+  type: url-test
+  use:
+  - 1.ImmTelecom
+  - 2.FlowerCloud
+
+proxy-providers:
+  1.ImmTelecom:
+    <<: *p
+    path: ./proxies/1.ImmTelecom.yaml
+    url: ""
+    
+  2.FlowerCloud:
+    <<: *p
+    path: ./proxies/2.FlowerCloud.yaml
+    url: ""
+
+
+sniffer:
+  enable: true
+  parse-pure-ip: true
+  force-dns-mapping: true
+  override-destination: true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+  skip-domain:
+    - "Mijia Cloud"
+
+
+dns:
+  enable: true
+  ipv6: false
+  listen: 0.0.0.0:1053
+  nameserver:
+    - 119.29.29.29
+    - 223.5.5.5
+    - tls://dot.pub:853
+    - tls://dns.alidns.com:853
+    - https://doh.pub:443/dns-query
+    - https://dns.alidns.com:443/dns-query
+  nameserver-policy:
+    "RULE-SET:CN_Domain":
+      - 218.85.157.99
+      - 218.85.152.99
+      - 211.143.147.120
+      - 112.5.230.54
+      - 114.114.114.114
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/15
+  fake-ip-filter:
+    - "*.lan"
+    - "*.localdomain"
+    - "*.example"
+    - "*.invalid"
+    - "*.localhost"
+    - "*.test"
+    - "*.local"
+    - "*.home.arpa"
+    - time.*.com
+    - time.*.gov
+    - time.*.edu.cn
+    - time.*.apple.com
+    - time1.*.com
+    - time2.*.com
+    - time3.*.com
+    - time4.*.com
+    - time5.*.com
+    - time6.*.com
+    - time7.*.com
+    - ntp.*.com
+    - ntp1.*.com
+    - ntp2.*.com
+    - ntp3.*.com
+    - ntp4.*.com
+    - ntp5.*.com
+    - ntp6.*.com
+    - ntp7.*.com
+    - "*.time.edu.cn"
+    - "*.ntp.org.cn"
+    - +.pool.ntp.org
+    - time1.cloud.tencent.com
+    - stun.*.*
+    - stun.*.*.*
+    - swscan.apple.com
+    - mesu.apple.com
+    - music.163.com
+    - "*.music.163.com"
+    - "*.126.net"
+    - musicapi.taihe.com
+    - music.taihe.com
+    - songsearch.kugou.com
+    - trackercdn.kugou.com
+    - "*.kuwo.cn"
+    - api-jooxtt.sanook.com
+    - api.joox.com
+    - y.qq.com
+    - "*.y.qq.com"
+    - streamoc.music.tc.qq.com
+    - mobileoc.music.tc.qq.com
+    - isure.stream.qqmusic.qq.com
+    - dl.stream.qqmusic.qq.com
+    - aqqmusic.tc.qq.com
+    - amobile.music.tc.qq.com
+    - localhost.ptlogin2.qq.com
+    - "*.msftconnecttest.com"
+    - "*.msftncsi.com"
+    - "*.xiami.com"
+    - "*.music.migu.cn"
+    - music.migu.cn
+    - +.wotgame.cn
+    - +.wggames.cn
+    - +.wowsgame.cn
+    - +.wargaming.net
+    - "*.*.*.srv.nintendo.net"
+    - "*.*.stun.playstation.net"
+    - xbox.*.*.microsoft.com
+    - "*.*.xboxlive.com"
+    - "*.ipv6.microsoft.com"
+    - teredo.*.*.*
+    - teredo.*.*
+    - speedtest.cros.wr.pvp.net
+    - +.jjvip8.com
+    - www.douyu.com
+    - activityapi.huya.com
+    - activityapi.huya.com.w.cdngslb.com
+    - www.bilibili.com
+    - api.bilibili.com
+    - a.w.bilicdn1.com
+
+
+proxies:
+  - {name: 🌎 Direct, type: direct, udp: true}
+  - {name: ⛔️ Reject, type: reject}
+  - {name: 🌐 DNS_Hijack, type: dns}
+
+proxy_groups: &proxy_groups
+    type: select
+    proxies:
+      - 🎯 Proxies
+      - ♻️ Urltest
+      - 🇭🇰 HKG
+      - 🇹🇼 TWN
+      - 🇸🇬 SGP
+      - 🇯🇵 JPN
+      - 🇺🇲 USA
+      - 🌍 Global
+      - 🎬 0.2X
+      - 🏠 Home
+      - 🌎 Direct
+      - ⛔️ Reject
+
+proxy-groups:
+  - name: 🎯 Proxies
+    type: select
+    proxies:
+      - ♻️ Urltest
+      - 🇭🇰 HKG
+      - 🇹🇼 TWN
+      - 🇸🇬 SGP
+      - 🇯🇵 JPN
+      - 🇺🇲 USA
+      - 🌍 Global
+      - 🎬 0.2X
+      - 🏠 Home
+      - 🌎 Direct
+
+  - name: ♻️ Urltest
+    type: url-test
+    <<: *A
+
+  - name: BiliBili
+    type: select
+    proxies:
+      - 🎯 Proxies
+      - 🇭🇰 HKG
+      - 🇹🇼 TWN
+      - 🌍 Global
+      - 🎬 0.2X
+      - 🌎 Direct
+
+  - name: Emby
+    type: select
+    proxies:
+      - 🎯 Proxies
+      - 🇺🇲 USA
+      - 🎬 0.2X
+      - 🌎 Direct
+
+  - name: Spotify
+    <<: *proxy_groups
+
+  - name: TikTok
+    <<: *proxy_groups
+
+  - name: Twitter
+    <<: *proxy_groups
+
+  - name: YouTube
+    <<: *proxy_groups
+
+  - name: AD
+    type: select
+    proxies:
+      - ⛔️ Reject
+      - 🌎 Direct
+      - REJECT-DROP
+      - PASS
+
+  - name: Final
+    <<: *proxy_groups
+
+  - name: 🇭🇰 HKG
+    filter: "^(?=.*(香港|HKG)).*$"
+    <<: *All
+
+  - name: 🇹🇼 TWN
+    filter: "^(?=.*(台湾|TWN)).*$"
+    <<: *All
+
+  - name: 🇸🇬 SGP
+    filter: "^(?=.*(新加坡|SGP)).*$"
+    <<: *All
+
+  - name: 🇯🇵 JPN
+    filter: "^(?=.*(日本|JPN)).*$"
+    <<: *All
+
+  - name: 🇺🇲 USA
+    filter: "^(?=.*(美国|USA)).*$"
+    <<: *All
+
+  - name: 🌍 Global
+    filter: "^(?!.*(香港|HKG|日本|JPN|美国|USA|台湾|TWN|新加坡|SGP|到期|Expire|流量|Traffic)).*$"
+    <<: *All
+
+  - name: 🎬 0.2X
+    filter: "^(?=.*(实验性)).*$"
+    <<: *All
+
+  - name: 🏠 Home
+    filter: "^(?=.*(19)).*$"
+    <<: *All
+
+
+rule-anchor:
+  Apps: &Apps
+    type: http
+    behavior: classical
+    format: text
+    interval: 86400
+
+  IPCIDR: &IPCIDR
+    type: http
+    behavior: ipcidr
+    format: mrs
+    interval: 86400
+
+  Domain: &Domain
+    type: http
+    behavior: domain
+    format: mrs
+    interval: 86400
+
+rule-providers:
+  AI:
+    <<: *Apps
+    path: ./rules/AI.list
+    url: "https://raw.githubusercontent.com/kh12342/proxy-rules/refs/heads/main/rule/AI.list"
+
+  BiliBili:
+    <<: *Apps
+    path: ./rules/BiliBili.list
+    url: "https://raw.githubusercontent.com/kh12342/proxy-rules/refs/heads/main/rule/BiliBili.list"
+
+  Direct:
+    <<: *Apps
+    path: ./rules/Direct.list
+    url: "https://raw.githubusercontent.com/kh12342/proxy-rules/refs/heads/main/rule/Direct.list"
+
+  Microsoft:
+    <<: *Apps
+    path: ./rules/Microsoft.list
+    url: "https://raw.githubusercontent.com/kh12342/proxy-rules/refs/heads/main/rule/Microsoft.list"
+
+  Proxies:
+    <<: *Apps
+    path: ./rules/Proxies.list
+    url: "https://raw.githubusercontent.com/kh12342/proxy-rules/refs/heads/main/rule/Proxies.list"
+
+  AD:
+    <<: *Domain
+    path: ./rules/AD.mrs
+    url: "https://raw.githubusercontent.com/kh12342/proxy-rules/refs/heads/main/rule/AD.mrs"
+
+  Apple_Domain:
+    <<: *Domain
+    path: ./rules/Apple_Domain.mrs
+    url: "https://raw.githubusercontent.com/kh12342/proxy-rules/refs/heads/main/rule/Apple_Domain.mrs"
+
+  Apple_IP:
+    <<: *IPCIDR
+    path: ./rules/Apple_IP.mrs
+    url: "https://raw.githubusercontent.com/kh12342/proxy-rules/refs/heads/main/rule/Apple_IP.mrs"
+
+  Bahamut:
+    <<: *Domain
+    path: ./rules/Bahamut.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bahamut.mrs"
+
+  CN_Domain:
+    <<: *Domain
+    path: ./rules/CN_Domain.mrs
+    url: "https://raw.githubusercontent.com/kh12342/proxy-rules/refs/heads/main/rule/CN_Domain.mrs"
+
+  CN_IP:
+    <<: *IPCIDR
+    path: ./rules/CN_IP.mrs
+    url: "https://raw.githubusercontent.com/kh12342/proxy-rules/refs/heads/main/rule/CN_IP.mrs"
+
+  Emby:
+    <<: *Domain
+    path: ./rules/Emby.mrs
+    url: "https://raw.githubusercontent.com/kh12342/proxy-rules/refs/heads/main/rule/Emby.mrs"
+
+  Google_Domain:
+    <<: *Domain
+    path: ./rules/Google_Domain.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.mrs"
+
+  Google_IP:
+    <<: *IPCIDR
+    path: ./rules/Google_IP.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"
+
+  Spotify:
+    <<: *Domain
+    path: ./rules/Spotify.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/spotify.mrs"
+
+  Telegram_Domain:
+    <<: *Domain
+    path: ./rules/Telegram_Domain.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs"
+
+  Telegram_IP:
+    <<: *IPCIDR
+    path: ./rules/Telegram_IP.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"
+
+  TikTok:
+    <<: *Domain
+    path: ./rules/TikTok.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tiktok.mrs"
+
+  Twitter_Domain:
+    <<: *Domain
+    path: ./rules/Twitter_Domain.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/twitter.mrs"
+
+  Twitter_IP:
+    <<: *IPCIDR
+    path: ./rules/Twitter_IP.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/twitter.mrs"
+    
+  YouTube:
+    <<: *Domain
+    path: ./rules/YouTube.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs"
+
+rules:
+  - DST-PORT,53,🌐 DNS_Hijack
+  - RULE-SET,Proxies,🎯 Proxies
+  - RULE-SET,Emby,Emby
+  - RULE-SET,AD,AD
+  - RULE-SET,AI,🇺🇲 USA
+  - RULE-SET,Telegram_Domain,🇸🇬 SGP
+  - RULE-SET,Telegram_IP,🇸🇬 SGP,no-resolve
+  - RULE-SET,YouTube,YouTube
+  - RULE-SET,Twitter_Domain,Twitter
+  - RULE-SET,Twitter_IP,Twitter,no-resolve
+  - RULE-SET,Bahamut,🇹🇼 TWN
+  - RULE-SET,BiliBili,BiliBili
+  - RULE-SET,Apple_Domain,🇺🇲 USA
+  - RULE-SET,Apple_IP,🇺🇲 USA,no-resolve
+  - RULE-SET,Microsoft,🇺🇲 USA
+  - RULE-SET,Spotify,Spotify
+  - RULE-SET,Google_Domain,🎯 Proxies
+  - RULE-SET,Google_IP,🎯 Proxies,no-resolve
+  - RULE-SET,TikTok,TikTok
+  - RULE-SET,Direct,🌎 Direct
+  - RULE-SET,CN_Domain,🌎 Direct
+  - RULE-SET,CN_IP,🌎 Direct,no-resolve
+  - MATCH,Final
