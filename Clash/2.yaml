@@ -1,0 +1,301 @@
+mixed-port: 7890
+redir-port: 7891
+tproxy-port: 1536
+ipv6: false
+allow-lan: true
+unified-delay: true
+tcp-concurrent: true
+profile:
+  store-fake-ip: true
+  store-selected: true
+mode: Rule
+log-level: info
+find-process-mode: always
+external-controller: 127.0.0.1:9999
+external-ui: ui
+external-ui-url: "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip"
+secret: ""
+geodata-mode: true
+geo-auto-update: true
+geo-update-interval: 72
+geox-url:
+  geoip: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.dat"
+  mmdb: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/geoip.metadb"
+  asn: "https://github.com/MetaCubeX/meta-rules-dat/releases/download/latest/GeoLite2-ASN.mmdb"
+
+sniffer:
+  enable: true
+  parse-pure-ip: true
+  force-dns-mapping: true
+  override-destination: true
+  sniff:
+    HTTP:
+      ports: [80, 8080-8880]
+    TLS:
+      ports: [443, 8443]
+    QUIC:
+      ports: [443, 8443]
+  skip-domain:
+    - "Mijia Cloud"
+
+tun:
+  enable: true
+  stack: gvisor
+  device: service
+  dns-hijack:
+    - "any:53"
+    - "tcp://any:53"
+  auto-route: true
+  strict-route: true
+  auto-redirect: false
+  auto-detect-interface: true
+
+dns:
+  enable: true
+  ipv6: false
+  listen: 0.0.0.0:1053
+  nameserver:
+    - 218.85.157.99
+    - 211.143.147.120
+    - 223.5.5.5
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.0/15
+  fake-ip-filter:
+    - "*.lan"
+    - "*.localdomain"
+    - "*.example"
+    - "*.invalid"
+    - "*.localhost"
+    - "*.test"
+    - "*.local"
+    - "*.home.arpa"
+    - time.*.com
+    - time.*.gov
+    - time.*.edu.cn
+    - time1.*.com
+    - time2.*.com
+    - time3.*.com
+    - time4.*.com
+    - time5.*.com
+    - time6.*.com
+    - time7.*.com
+    - ntp.*.com
+    - ntp1.*.com
+    - ntp2.*.com
+    - ntp3.*.com
+    - ntp4.*.com
+    - ntp5.*.com
+    - ntp6.*.com
+    - ntp7.*.com
+    - "*.time.edu.cn"
+    - "*.ntp.org.cn"
+    - +.pool.ntp.org
+    - time1.cloud.tencent.com
+    - stun.*.*
+    - stun.*.*.*
+    - music.163.com
+    - "*.music.163.com"
+    - "*.126.net"
+    - musicapi.taihe.com
+    - music.taihe.com
+    - songsearch.kugou.com
+    - trackercdn.kugou.com
+    - "*.kuwo.cn"
+    - api-jooxtt.sanook.com
+    - api.joox.com
+    - y.qq.com
+    - "*.y.qq.com"
+    - streamoc.music.tc.qq.com
+    - mobileoc.music.tc.qq.com
+    - isure.stream.qqmusic.qq.com
+    - dl.stream.qqmusic.qq.com
+    - aqqmusic.tc.qq.com
+    - amobile.music.tc.qq.com
+    - localhost.ptlogin2.qq.com
+    - "*.msftconnecttest.com"
+    - "*.xiami.com"
+    - "*.music.migu.cn"
+    - music.migu.cn
+    - teredo.*.*.*
+    - teredo.*.*
+    - +.jjvip8.com
+    - www.douyu.com
+    - activityapi.huya.com
+    - activityapi.huya.com.w.cdngslb.com
+    - www.bilibili.com
+    - api.bilibili.com
+    - a.w.bilicdn1.com
+
+
+p: &p
+  type: http
+  interval: 86400
+  health-check:
+    enable: true
+    url: https://www.gstatic.com/generate_204
+    interval: 900
+
+a: &a
+  type: url-test
+  use:
+  - ImmTelecom
+
+proxy-providers:
+  ImmTelecom:
+    <<: *p
+    path: ./proxies/ImmTelecom.yaml
+    url: ""
+
+
+proxies:
+  - {name: 🌎 Direct, type: direct, udp: true}
+  - {name: ⛔️ Reject, type: reject}
+  - {name: 🌐 DNS_Hijack, type: dns}
+  - {name: 🏠 Home, type: vmess, server: , port: , uuid: , alterId: 0, cipher: auto, network: ws, ws-opts: {headers: {Host: bilibili.com}}}
+  - {name: 🇭🇰 ISIF, type: vless, server: , port: , uuid: , network: tcp, tls: true, flow: xtls-rprx-vision, client-fingerprint: chrome, servername: speed.cloudflare.com, reality-opts: {public-key: , short-id: , spider-x: /}}
+
+proxy_groups: &g
+    type: select
+    proxies:
+      - 🎯 Proxies
+      - 🇭🇰 HKG
+      - 🇹🇼 TWN
+      - 🇸🇬 SGP
+      - 🇯🇵 JPN
+      - 🇺🇲 USA
+      - 🌍 Global
+      - ⛔️ Reject
+
+proxy-groups:
+  - name: 🎯 Proxies
+    type: select
+    proxies:
+      - 🇭🇰 HKG
+      - 🇹🇼 TWN
+      - 🇸🇬 SGP
+      - 🇯🇵 JPN
+      - 🇺🇲 USA
+      - 🌍 Global
+
+  - name: AI
+    <<: *g
+
+  - name: BiliBili
+    type: select
+    proxies:
+      - 🎯 Proxies
+      - 🇭🇰 HKG
+      - 🇹🇼 TWN
+      - 🌎 Direct
+
+  - name: Emby
+    type: select
+    proxies:
+      - 🎯 Proxies
+      - 🇭🇰 ISIF
+      - 🇺🇲 USA
+      - 🌎 Direct
+
+  - name: Google
+    <<: *g
+
+  - name: TikTok
+    <<: *g
+
+  - name: AD
+    type: select
+    proxies:
+      - ⛔️ Reject
+      - PASS
+
+  - name: Final
+    <<: *g
+
+  - name: 🇭🇰 HKG
+    type: url-test
+    include-all: true
+    filter: "^(?=.*(HKG|ISIF)).*$"
+
+  - name: 🇹🇼 TWN
+    filter: "^(?=.*(TWN)).*$"
+    <<: *a
+
+  - name: 🇸🇬 SGP
+    filter: "^(?=.*(SGP)).*$"
+    <<: *a
+
+  - name: 🇯🇵 JPN
+    filter: "^(?=.*(JPN)).*$"
+    <<: *a
+
+  - name: 🇺🇲 USA
+    filter: "^(?=.*(USA)).*$"
+    <<: *a
+
+
+  - name: 🌍 Global
+    filter: "^(?!.*(HKG|JPN|USA|TWN|SGP|到期|流量|ISIF)).*$"
+    <<: *a
+
+
+rule-anchor:
+  ipcidr: &ipcidr
+    {type: http, behavior: ipcidr, format: mrs, interval: 86400}
+  domain: &domain
+    {type: http, behavior: domain, format: mrs, interval: 86400}
+
+rule-providers:
+  AD:
+    <<: *domain
+    path: ./rules/AD.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/category-ads-all.mrs"
+
+  AI:
+    <<: *domain
+    path: ./rules/AI.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/meta/geo/geosite/openai.mrs"
+
+  BiliBili:
+    <<: *domain
+    path: ./rules/BiliBili.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/bilibili.mrs"
+
+  Emby:
+    <<: *domain
+    path: ./rules/Emby.mrs
+    url: "https://raw.githubusercontent.com/kh12342/proxy-rules/refs/heads/main/rule/Emby.mrs"
+
+  Google:
+    <<: *domain
+    path: ./rules/Google.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.mrs"
+
+  Private_IP:
+    <<: *ipcidr
+    path: ./rules/Private_IP.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs"
+
+  Proxy:
+    <<: *domain
+    path: ./rules/Proxy.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs"
+
+  TikTok:
+    <<: *domain
+    path: ./rules/TikTok.mrs
+    url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tiktok.mrs"
+
+rules:
+  - DST-PORT,53,🌐 DNS_Hijack
+  - IP-CIDR,192.168.1.0/24,🏠 Home,no-reslove
+  - RULE-SET,Emby,Emby
+  - RULE-SET,AD,AD
+  - RULE-SET,AI,AI
+  - RULE-SET,BiliBili,BiliBili
+  - RULE-SET,TikTok,TikTok
+  - RULE-SET,Google,Google
+  - RULE-SET,Proxy,🎯 Proxies
+
+  - GEOIP,CN,🌎 Direct
+  - RULE-SET,Private_IP,🌎 Direct,no-resolve
+  - MATCH,Final
