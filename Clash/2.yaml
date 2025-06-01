@@ -126,7 +126,6 @@ dns:
     - api.bilibili.com
     - a.w.bilicdn1.com
 
-
 p: &p
   type: http
   interval: 86400
@@ -135,17 +134,11 @@ p: &p
     url: https://www.gstatic.com/generate_204
     interval: 900
 
-a: &a
-  type: url-test
-  use:
-  - ImmTelecom
-
 proxy-providers:
   ImmTelecom:
     <<: *p
     path: ./proxies/ImmTelecom.yaml
     url: ""
-
 
 proxies:
   - {name: 🌎 Direct, type: direct, udp: true}
@@ -154,6 +147,11 @@ proxies:
   - {name: 🏠 Home, type: vmess, server: , port: , uuid: , alterId: 0, cipher: auto, network: ws, ws-opts: {headers: {Host: bilibili.com}}}
   - {name: 🇭🇰 ISIF, type: vless, server: , port: , uuid: , network: tcp, tls: true, flow: xtls-rprx-vision, client-fingerprint: chrome, servername: speed.cloudflare.com, reality-opts: {public-key: , short-id: , spider-x: /}}
 
+a: &a
+  type: url-test
+  use:
+  - ImmTelecom
+  
 proxy_groups: &g
     type: select
     proxies:
