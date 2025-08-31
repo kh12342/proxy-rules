@@ -5,7 +5,7 @@ DOMAIN-SUFFIX,openai.com
 DOMAIN-SUFFIX,spotify.com
 DOMAIN-SUFFIX,tospotify.com
 DOMAIN-SUFFIX,spotifycdn.com
-DOMAIN,canvaz.scdn.co
+DOMAIN-SUFFIX,scdn.co
 DOMAIN,app-measurement.com
 DOMAIN,cdn.branch.io
 DOMAIN,browser-intake-datadoghq.com
