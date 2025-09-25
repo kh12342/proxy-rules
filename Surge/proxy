@@ -1,3 +1,5 @@
+DOMAIN-SUFFIX,github.com
+DOMAIN-SUFFIX,cloudflare.com
 DOMAIN-SUFFIX,supercell.com
 DOMAIN-SUFFIX,clashroyale.com
 DOMAIN-SUFFIX,clashroyaleapp.com
@@ -13,5 +15,4 @@ DOMAIN,browser-intake-datadoghq.com
 DOMAIN,api.swiftgram.app
 DOMAIN,gspe1-ssl.ls.apple.com
 DOMAIN,apple-relay.fastly-edge.com
-DOMAIN,apple-relay.cloudflare.com
 DOMAIN,apple-relay.apple.com
