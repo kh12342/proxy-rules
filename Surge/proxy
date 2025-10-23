@@ -7,6 +7,11 @@ DOMAIN-SUFFIX,spotify.com
 DOMAIN-SUFFIX,tospotify.com
 DOMAIN-SUFFIX,spotifycdn.com
 DOMAIN-SUFFIX,scdn.co
-DOMAIN,api.swiftgram.app
+DOMAIN-SUFFIX,smoot.apple.com
 DOMAIN,gspe1-ssl.ls.apple.com
+DOMAIN,apple-relay.cloudflare.com
 DOMAIN,apple-relay.apple.com
+DOMAIN,apple-relay.fastly-edge.com
+DOMAIN,cp4.cloudflare.com
+DOMAIN,guzzoni.apple.com
+DOMAIN,api.swiftgram.app
