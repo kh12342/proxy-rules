@@ -7,7 +7,7 @@ cat > /etc/snell/snell-server.conf << EOF
 [snell-server]
 listen = 0.0.0.0:8080
 psk = password
-ipv6 = false
+ipv6 = true
 obfs = http
 EOF
 cat > /etc/systemd/system/snell.service << EOF
