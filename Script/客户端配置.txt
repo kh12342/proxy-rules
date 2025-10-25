@@ -1,8 +1,12 @@
 anytls://password@127.0.0.1:443/?insecure=1&sni=yunpanlive.chinaunicomvideo.cn
 #127.0.0.1改为服务器地址
+#修改配置: nano /etc/mihomo/config.yaml
+#重启: systemctl restart mihomo
 
 surge:
   端口: 8080
   psk: password
   obfs = http
   obfs host = yunpanlive.chinaunicomvideo.cn
+#修改配置: nano  /etc/snell/snell-server.conf
+#重启: systemctl restart snell
