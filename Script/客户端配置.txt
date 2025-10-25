@@ -1,1 +1,2 @@
-
+anytls://542a201480bd8a80f4d8cda9a6a7981@127.0.0.1:443/?insecure=1&sni=yunpanlive.chinaunicomvideo.cn
+#127.0.0.1改为服务器地址
