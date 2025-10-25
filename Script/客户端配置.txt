@@ -1,6 +1,7 @@
 #配置不通请确保防火墙已关闭,127.0.0.1改为服务器地址
 
 anytls://password@127.0.0.1:443/?insecure=1&sni=yunpanlive.chinaunicomvideo.cn
+#在anytls.txt第29行改写sni(可选)
 #修改配置: nano /etc/mihomo/config.yaml
 #重启: systemctl restart mihomo
 
