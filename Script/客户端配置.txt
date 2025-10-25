@@ -6,5 +6,5 @@ anytls://password@127.0.0.1:443/?insecure=1&sni=yunpanlive.chinaunicomvideo.cn
 #重启: systemctl restart mihomo
 
 surge = snell, 127.0.0.1, 8080, psk="password", version=4, block-quic=on, obfs=http, obfs-host=yunpanlive.chinaunicomvideo.cn
-#修改配置: nano  /etc/snell/snell-server.conf
+#修改配置: nano /etc/snell/snell-server.conf
 #重启: systemctl restart snell
