@@ -1,3 +1,4 @@
+#!/bin/bash
 apt update && apt install wget unzip
 wget https://github.com/passeway/Snell/releases/download/v5.0.0/snell-server-v5.0.0-linux-amd64.zip
 unzip snell-server-v5.0.0-linux-amd64.zip -d /usr/local/bin
