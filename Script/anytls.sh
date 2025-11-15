@@ -1,3 +1,4 @@
+#!/bin/bash
 apt update && apt install -y wget unzip openssl
 wget https://github.com/anytls/anytls-go/releases/download/v0.0.11/anytls\_0.0.11\_linux\_amd64.zip
 unzip anytls_0.0.11_linux_amd64.zip
